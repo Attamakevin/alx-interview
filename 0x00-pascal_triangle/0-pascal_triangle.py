@@ -6,11 +6,10 @@ def pascal_triangle(n):
     """
     returns a list of lists of integers representing the Pascal’s triangle of n
     """
-    new_list =[]
+    new_list = []
     if n <= 0:
         return new_list
 
     for x in range(n):
         new_list.append("".join(map(str, str(11**x))))
     return new_list
-
