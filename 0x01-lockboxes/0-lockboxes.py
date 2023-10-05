@@ -16,6 +16,8 @@ def canUnlockAll(boxes):
 
     n = len(boxes)
     visited = [False] * n
+    visited[0] = True
+
     dfs(0, visited)
 
     return all(visited)
