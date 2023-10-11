@@ -1,8 +1,10 @@
 #!/usr/bin/python3
 '''
-    a funcion to dtermine the minimum operation on a given array 
+    a funcion to dtermine the minimum operation on a given array
     of n contents
 '''
+
+
 def minOperations(n):
     '''minimum number of operations methods'''
     if n <= 1:
@@ -24,4 +26,3 @@ def minOperations(n):
         return operations
     else:
         return 0  # It's impossible to achieve exactly n 'H' characters.
-
