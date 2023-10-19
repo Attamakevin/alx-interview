@@ -14,45 +14,48 @@
     status codes should be printed in ascending order
 """
 
-
 import sys
-import re
-from collections import defaultdict
 
-# Regular expression to match the input format
-log_pattern = re.compile(r'(\d+\.\d+\.\d+\.\d+) - \[([^]]+)\] "GET /projects/260 HTTP/1.1" (\d+) (\d+)')
+# store the count of all status codes in a dictionary
+status_codes_dict = {'200': 0, '301': 0, '400': 0, '401': 0, '403': 0,
+                     '404': 0, '405': 0, '500': 0}
 
-# Initialize variables
 total_size = 0
-status_code_counts = defaultdict(int)
-line_count = 0
+count = 0  # keep count of the number lines counted
 
 try:
     for line in sys.stdin:
-        match = log_pattern.match(line)
-        if match:
-            line_count += 1
-            ip, _, status_code, file_size = match.groups()
-            total_size += int(file_size)
-            status_code = int(status_code)
-            if status_code in [200, 301, 400, 401, 403, 404, 405, 500]:
-                status_code_counts[status_code] += 1
+        line_list = line.split(" ")
 
-            # Print statistics every 10 lines
-            if line_count % 10 == 0:
-                print("Total file size:", total_size)
-                for code in sorted(status_code_counts.keys()):
-                    print(f"{code}: {status_code_counts[code]}")
-                print()
+        if len(line_list) > 4:
+            status_code = line_list[-2]
+            file_size = int(line_list[-1])
 
-except KeyboardInterrupt:
-    # Handle CTRL+C to print the statistics and exit gracefully
-    print("\nTotal file size:", total_size)
-    for code in sorted(status_code_counts.keys()):
-        print(f"{code}: {status_code_counts[code]}")
+            # check if the status code receive exists in the dictionary and
+            # increment its count
+            if status_code in status_codes_dict.keys():
+                status_codes_dict[status_code] += 1
 
-# Final statistics if there are remaining lines
-if line_count % 10 != 0:
-    print("\nTotal file size:", total_size)
-    for code in sorted(status_code_counts.keys()):
-        print(f"{code}: {status_code_counts[code]}")
+            # update total size
+            total_size += file_size
+
+            # update count of lines
+            count += 1
+
+        if count == 10:
+            count = 0  # reset count
+            print('File size: {}'.format(total_size))
+
+            # print out status code counts
+            for key, value in sorted(status_codes_dict.items()):
+                if value != 0:
+                    print('{}: {}'.format(key, value))
+
+except Exception as err:
+    pass
+
+finally:
+    print('File size: {}'.format(total_size))
+    for key, value in sorted(status_codes_dict.items()):
+        if value != 0:
+            print('{}: {}'.format(key, value))
