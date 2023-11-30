@@ -1,4 +1,6 @@
 #!/usr/bin/python3
+"""check x value"""
+
 
 def check(x):
     if x != 0:
