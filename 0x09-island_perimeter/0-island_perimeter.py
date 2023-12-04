@@ -5,8 +5,6 @@
 def island_perimeter(grid):
 
     """function for island perimeter"""
-
-
     if not grid or not grid[0]:
         return 0
 
